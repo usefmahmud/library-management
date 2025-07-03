@@ -93,7 +93,9 @@ public class BookService : IBookService
             Author = author,
             Categories = await _context.Categories
                 .Where(c => createBookDto.CategoryIds.Contains(c.Id))
-                .ToListAsync()
+                .ToListAsync(),
+            CopiesAvailable = createBookDto.CopiesAvailable,
+            PageCount = createBookDto.PageCount
         };
 
         _context.Books.Add(book);
@@ -104,6 +106,7 @@ public class BookService : IBookService
             Id = book.Id,
             Title = book.Title,
             AuthorName = book.Author.Name,
+            AuthorId = book.Author.Id,
             CategoryNames = book.Categories.Select(c => c.Name).ToList()
         };
     }
