@@ -20,6 +20,7 @@ public class BookService : IBookService
             {
                 Id = b.Id,
                 Title = b.Title,
+                AuthorId = b.Author.Id,
                 AuthorName = b.Author.Name,
                 CategoryNames = b.Categories.Select(c => c.Name).ToList()
             })
@@ -75,6 +76,11 @@ public class BookService : IBookService
         var categoryCount = await _context.Categories
             .Where(c => createBookDto.CategoryIds.Contains(c.Id))
             .CountAsync();
+
+        if(categoryCount == 0)
+        {
+            throw new ArgumentException("At least one category must be specified.");
+        }
 
         if (categoryCount != createBookDto.CategoryIds.Count)
         {
