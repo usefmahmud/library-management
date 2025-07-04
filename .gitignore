@@ -9,6 +9,8 @@ artifacts/
 # Visual Studio Code
 .vscode/
 
+Properties/
+
 # User-specific files
 *.user
 *.userosscache
