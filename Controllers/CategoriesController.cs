@@ -7,13 +7,11 @@ namespace LibraryManagement.Controllers
     [ApiController]
     public class CategoriesController : ControllerBase
     {
-        private readonly LibraryContext _context;
         private readonly ICategoryService _categoryService;
 
-        public CategoriesController(LibraryContext context)
+        public CategoriesController(ICategoryService categoryService)
         {
-            _context = context;
-            _categoryService = new CategoryService(context);
+            _categoryService = categoryService;
         }
 
         [HttpGet]

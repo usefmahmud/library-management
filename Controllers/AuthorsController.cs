@@ -9,9 +9,9 @@ namespace LibraryManagement.Controllers
     {
         private readonly IAuthorService _authorService;
 
-        public AuthorsController(LibraryContext context)
+        public AuthorsController(IAuthorService authorService)
         {
-            _authorService = new AuthorService(context);
+            _authorService = authorService;
         }
 
         [HttpGet]

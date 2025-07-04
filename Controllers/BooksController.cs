@@ -9,9 +9,9 @@ namespace LibraryManagement.Controllers
     {
         private readonly IBookService _bookService;
 
-        public BooksController(LibraryContext context)
+        public BooksController(IBookService bookService)
         {
-            _bookService = new BookService(context);
+            _bookService = bookService;
         }
 
         [HttpGet]

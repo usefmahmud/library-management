@@ -6,6 +6,11 @@ var connectionString = builder.Configuration.GetConnectionString("LibrarySystemD
 builder.Services.AddDbContext<LibraryContext>(options =>
     options.UseSqlite(connectionString));
 
+// Register services for dependency injection
+builder.Services.AddScoped<IBookService, BookService>();
+builder.Services.AddScoped<IAuthorService, AuthorService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+
 builder.Services.AddOpenApi();
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen(c => {
@@ -19,15 +24,25 @@ builder.Services.AddSwaggerGen(c => {
 
 var app = builder.Build();
 
+// Ensure database is created and migrations are applied
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<LibraryContext>();
+    context.Database.EnsureCreated(); // This will create the database if it doesn't exist
+    // Alternatively, use: context.Database.Migrate(); if you want to apply pending migrations
+}
+
+// Enable Swagger in all environments for easier API testing
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Library Management API V1");
+    c.RoutePrefix = string.Empty; 
+});
+
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Library Management API V1");
-        c.RoutePrefix = string.Empty; 
-    });
 }
 
 app.UseHttpsRedirection();
