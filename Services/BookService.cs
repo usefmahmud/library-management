@@ -10,23 +10,32 @@ public class BookService : IBookService
         _context = context;
     }
 
-    public async Task<PaginatedResult<BookDto>> GetAllBooksAsync(int pageNumber, int pageSize)
+    public async Task<PaginatedResult<BookSummaryDto>> GetAllBooksAsync(int pageNumber, int pageSize)
     {
         var totalBooks = await _context.Books.CountAsync();
         var books = await _context.Books
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
-            .Select(b => new BookDto
+            .Select(b => new BookSummaryDto
             {
                 Id = b.Id,
                 Title = b.Title,
-                AuthorId = b.Author.Id,
-                AuthorName = b.Author.Name,
-                CategoryNames = b.Categories.Select(c => c.Name).ToList()
+                Author = new AuthorSummaryDto
+                {
+                    Id = b.Author.Id,
+                    Name = b.Author.Name
+                },
+                PageCount = b.PageCount,
+                CopiesAvailable = b.CopiesAvailable,
+                Categories = b.Categories.Select(c => new CategorySummaryDto
+                {
+                    Id = c.Id,
+                    Name = c.Name
+                }).ToList(),
             })
             .ToListAsync();
 
-        return new PaginatedResult<BookDto>
+        return new PaginatedResult<BookSummaryDto>
         {
             Items = books,
             TotalCount = totalBooks,
@@ -61,7 +70,8 @@ public class BookService : IBookService
                 Id = c.Id,
                 Name = c.Name
             }).ToList(),
-            CopiesAvailable = book.CopiesAvailable
+            CopiesAvailable = book.CopiesAvailable,
+            PageCount = book.PageCount,
         };
     }
 

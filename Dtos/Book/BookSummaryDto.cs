@@ -7,5 +7,6 @@ public class BookSummaryDto
     public AuthorSummaryDto Author { get; set; } = new AuthorSummaryDto();
     public List<CategorySummaryDto> Categories { get; set; } = new List<CategorySummaryDto>();
     public int PageCount { get; set; }
+    public int CopiesAvailable { get; set; }
     public bool IsAvailable { get; set; }
 }
