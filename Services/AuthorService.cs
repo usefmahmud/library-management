@@ -20,6 +20,7 @@ public class AuthorService : IAuthorService
             {
                 Id = a.Id,
                 Name = a.Name,
+                Bio = a.Bio,
                 BookCount = a.Books.Count()
             }).ToListAsync();
 
@@ -47,6 +48,7 @@ public class AuthorService : IAuthorService
         {
             Id = author.Id,
             Name = author.Name,
+            Bio = author.Bio,
             Books = author.Books.Select(b => new BookSummaryDto
             {
                 Id = b.Id,
