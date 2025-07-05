@@ -15,9 +15,9 @@ namespace LibraryManagement.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<PaginatedResult<BookDto>>> GetAllBooks(int pageNumber = 1, int pageSize = 10)
+        public async Task<ActionResult<PaginatedResult<BookDto>>> GetAllBooks(int pageNumber = 1, int pageSize = 10, string? searchTerm = null)
         {
-            var result = await _bookService.GetAllBooksAsync(pageNumber, pageSize);
+            var result = await _bookService.GetAllBooksAsync(pageNumber, pageSize, searchTerm);
             return Ok(result);
         }
 

@@ -10,12 +10,14 @@ public class BookService : IBookService
         _context = context;
     }
 
-    public async Task<PaginatedResult<BookSummaryDto>> GetAllBooksAsync(int pageNumber, int pageSize)
+    public async Task<PaginatedResult<BookSummaryDto>> GetAllBooksAsync(int pageNumber, int pageSize, string? searchTerm)
     {
         var totalBooks = await _context.Books.CountAsync();
         var books = await _context.Books
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
+            .Include(b => b.Author)
+            .Where(b => string.IsNullOrEmpty(searchTerm) || b.Title.Contains(searchTerm) || b.Author.Name.Contains(searchTerm))
             .Select(b => new BookSummaryDto
             {
                 Id = b.Id,
